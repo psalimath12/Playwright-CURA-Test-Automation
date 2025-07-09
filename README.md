@@ -1,4 +1,4 @@
-laywright Test Automation Framework - Katalon CURA Demo
+Playwright Test Automation Framework - Katalon CURA Demo
 This project demonstrates a Playwright end-to-end test automation framework built using the Page Object Model (POM) design pattern. It automates key functionalities of the Katalon CURA Healthcare Service demo application.
 
 Table of Contents
