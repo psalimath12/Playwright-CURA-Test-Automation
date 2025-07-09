@@ -16,7 +16,7 @@ class AppointmentPage {
     this.visitDateInput = page.locator('#txt_visit_date');
     this.commentTextarea = page.locator('#txt_comment');
     this.bookAppointmentButton = page.locator('#btn-book-appointment');
-   }
+  }
 
   /**
    * Asserts that the "Make Appointment" button is visible, indicating a successful login.
@@ -58,7 +58,7 @@ class AppointmentPage {
     await this.page.keyboard.press('Escape');
     await this.commentTextarea.click();
     await this.commentTextarea.fill(comment);
-   
+
     console.log('Attempting to book appointment and waiting for URL change...'); // Debug log
 
     // Click the book appointment button and wait for the URL to change to the summary page
@@ -69,8 +69,8 @@ class AppointmentPage {
     console.log('Successfully booked appointment and navigated to summary page.'); // Debug log
   }
 
-    
-   
- }
+
+
+}
 
 module.exports = AppointmentPage;

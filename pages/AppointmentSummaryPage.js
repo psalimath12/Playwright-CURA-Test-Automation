@@ -1,10 +1,10 @@
 const { expect } = require('@playwright/test');
 
-class AppointmentSummaryPage{
+class AppointmentSummaryPage {
 
 
-constructor(page){
-    this.page = page ;
+  constructor(page) {
+    this.page = page;
     // Locators for elements on the appointment summary page
     this.appointmentConfirmationHeader = page.locator('h2', { hasText: 'Appointment Confirmation' });
     this.facilityValue = page.locator('#facility');
@@ -14,21 +14,21 @@ constructor(page){
     this.commentValue = page.locator('#comment');
     this.goToHomepageButton = page.locator('.btn-default');
 
-}
+  }
 
-async expectOnAppointmentSummaryPage(){
-  await expect(this.page).toHaveURL(/.*appointment\.php#summary/); // Verify URL
+  async expectOnAppointmentSummaryPage() {
+    await expect(this.page).toHaveURL(/.*appointment\.php#summary/); // Verify URL
     await expect(this.appointmentConfirmationHeader).toBeVisible();
   }
 
-async expectAppointmentDetails(expectedDetails) {
+  async expectAppointmentDetails(expectedDetails) {
     await expect(this.facilityValue).toHaveText(expectedDetails.facility);
     await expect(this.hospitalReadmissionValue).toHaveText(expectedDetails.hospitalReadmission ? 'Yes' : 'No');
     await expect(this.programValue).toHaveText(expectedDetails.healthcareProgram);
     await expect(this.visitDateValue).toHaveText(expectedDetails.visitDate);
     await expect(this.commentValue).toHaveText(expectedDetails.comment);
   }
-async goToHomepage() {
+  async goToHomepage() {
     await this.goToHomepageButton.click();
   }
 }

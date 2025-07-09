@@ -47,7 +47,7 @@ test.describe('Login Functionality', () => {
       facility: 'Seoul CURA Healthcare Center',
       hospitalReadmission: true,
       healthcareProgram: 'Medicare',
-      visitDate: '21/07/2025', 
+      visitDate: '21/07/2025',
       comment: 'Routine check-up for annual health assessment.'
     };
 
@@ -64,4 +64,19 @@ test.describe('Login Functionality', () => {
     await appointmentSummaryPage.goToHomepage();
     await appointmentPage.expectOnAppointmentPage(); // Assuming homepage redirects to Appointment page after login
   });
+
+  test('should successfully logout after login', async () => {
+    // First, log in successfully
+    await loginPage.login('John Doe', 'ThisIsNotAPassword');
+    await appointmentPage.expectOnAppointmentPage();
+
+    // Now, perform logout
+    await loginPage.logout();
+
+    // Assert that we are back on the login page (handled within loginPage.logout())
+    // No additional assertions needed here as the logout method already asserts the state.
+  });
+
+
+
 });

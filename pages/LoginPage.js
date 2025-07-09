@@ -12,6 +12,8 @@ class LoginPage {
     this.passwordInput = page.locator('#txt-password');
     this.loginButton = page.locator('#btn-login');
     this.loginErrorMessage = page.locator('.text-danger'); // Locator for error message
+    this.menuToggle = page.locator('#menu-toggle');
+    this.logoutLink = page.locator('a[href="authenticate.php?logout"]');
   }
 
   /**
@@ -47,6 +49,14 @@ class LoginPage {
   async expectUsernameInputVisible() {
     await expect(this.usernameInput).toBeVisible();
   }
+
+  async logout() {
+
+    await this.menuToggle.click();
+    await this.logoutLink.click();
+    await expect(this.page).toHaveURL("https://katalon-demo-cura.herokuapp.com/");
+  }
+
 }
 
 module.exports = LoginPage;
