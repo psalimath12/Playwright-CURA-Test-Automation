@@ -1,0 +1,47 @@
+name: Playwright CI
+
+# This workflow runs on pushes to the 'main' branch and on pull requests targeting 'main'.
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    # Use the latest stable version of Ubuntu
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 1. Checkout repository
+      # Checks out your repository under $GITHUB_WORKSPACE, so the workflow can access it.
+      uses: actions/checkout@v4
+
+    - name: 2. Set up Node.js
+      # Sets up the specified version of Node.js (v20 is a good stable choice).
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: 3. Install dependencies
+      # Install project dependencies. 'npm ci' is preferred over 'npm install' in CI environments
+      # because it uses the package-lock.json file to ensure exact dependency versions.
+      run: npm ci
+
+    - name: 4. Install Playwright browser dependencies
+      # Install the required Playwright browser binaries (Chromium, Firefox, WebKit) and their system dependencies.
+      run: npx playwright install --with-deps
+
+    - name: 5. Run Playwright tests
+      # Execute the tests using the configurations defined in playwright.config.js.
+      # The '--reporter=junit,html' ensures we get reports for the next step.
+      run: npx playwright test
+
+    - name: 6. Upload Playwright Report (on failure)
+      # Upload the test artifacts (traces and HTML report) if the previous test step fails.
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-html-report-${{ github.sha }}
+        path: playwright-report/
+        retention-days: 5
