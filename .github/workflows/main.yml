@@ -3,13 +3,14 @@ name: Playwright CI
 # This workflow runs on pushes to the 'main' branch and on pull requests targeting 'main'.
 on:
   push:
-    branches: [ main ]
+    branches: [ main, ps/logouttest ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, ps/logouttest ]
   workflow_dispatch: {} # 🌟 ADD THIS TEMPORARILY
 
 jobs:
   test:
+    container: mcr.microsoft.com/playwright:v1.56.1-jammy # Use Playwright's official Docker image with all dependencies pre-installed
     # Use the latest stable version of Ubuntu
     runs-on: ubuntu-latest
     
@@ -45,9 +46,9 @@ jobs:
       # because it uses the package-lock.json file to ensure exact dependency versions.
       run: npm ci
 
-    - name: 5. Install Playwright browser dependencies
+    #- name: 5. Install Playwright browser dependencies
       # Install the required Playwright browser binaries (Chromium, Firefox, WebKit) and their system dependencies.
-      run: npx playwright install --with-deps
+     # run: npx playwright install --with-deps
 
     - name: 6. Run Playwright tests (Sharded)
       # 🌟 MODIFIED: Use --shard=${{ matrix.shard }}/${{ matrix.shard-total }}
