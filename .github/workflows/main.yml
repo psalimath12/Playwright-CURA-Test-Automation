@@ -6,11 +6,20 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch: {} # 🌟 ADD THIS TEMPORARILY
 
 jobs:
   test:
     # Use the latest stable version of Ubuntu
     runs-on: ubuntu-latest
+    
+    # 🌟 NEW: Matrix strategy to parallelize tests across multiple runners (sharding)
+    strategy:
+      fail-fast: false # Allows other shards to complete even if one fails
+      matrix:
+        # Define how many parts (shards) to split the tests into
+        shard: [1, 2, 3, 4]
+        shard-total: [4]
 
     steps:
     - name: 1. Checkout repository
@@ -23,25 +32,34 @@ jobs:
       with:
         node-version: 20
 
-    - name: 3. Install dependencies
+    - name: 3. Cache dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: 4. Install dependencies
       # Install project dependencies. 'npm ci' is preferred over 'npm install' in CI environments
       # because it uses the package-lock.json file to ensure exact dependency versions.
       run: npm ci
 
-    - name: 4. Install Playwright browser dependencies
+    - name: 5. Install Playwright browser dependencies
       # Install the required Playwright browser binaries (Chromium, Firefox, WebKit) and their system dependencies.
       run: npx playwright install --with-deps
 
-    - name: 5. Run Playwright tests
-      # Execute the tests using the configurations defined in playwright.config.js.
-      # The '--reporter=junit,html' ensures we get reports for the next step.
-      run: npx playwright test
-
-    - name: 6. Upload Playwright Report (on failure)
+    - name: 6. Run Playwright tests (Sharded)
+      # 🌟 MODIFIED: Use --shard=${{ matrix.shard }}/${{ matrix.shard-total }}
+      # This command splits the total tests into 4 chunks and runs only one chunk per runner.
+      run: npx playwright test --shard=${{ matrix.shard }}/${{ matrix.shard-total }}
+      
+    - name: 7. Upload Playwright Report (on failure)
       # Upload the test artifacts (traces and HTML report) if the previous test step fails.
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: playwright-html-report-${{ github.sha }}
+        # 🌟 MODIFIED: Append shard number to artifact name for easier debugging
+        name: playwright-html-report-shard-${{ matrix.shard }}-${{ github.sha }}
         path: playwright-report/
         retention-days: 5
