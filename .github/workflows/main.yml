@@ -3,14 +3,14 @@ name: Playwright CI
 # This workflow runs on pushes to the 'main' branch and on pull requests targeting 'main'.
 on:
   push:
-    branches: [ main, ps/logouttest ]
+    branches: [ main, ps/** ]
   pull_request:
-    branches: [ main, ps/logouttest ]
+    branches: [ main, ps/** ]
   workflow_dispatch: {} # 🌟 ADD THIS TEMPORARILY
 
 jobs:
   test:
-    container: mcr.microsoft.com/playwright:v1.56.1-jammy # Use Playwright's official Docker image with all dependencies pre-installed
+    container: mcr.microsoft.com/playwright::v1.53.2-jammy # Use Playwright's official Docker image with all dependencies pre-installed
     # Use the latest stable version of Ubuntu
     runs-on: ubuntu-latest
     
