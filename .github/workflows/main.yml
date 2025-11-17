@@ -45,8 +45,11 @@ jobs:
       - name: 5. Run Playwright tests (Full SUITE)
         # 🌟 MODIFIED: Run all tests in one go
         run: npx playwright test
+      
+      - name: 6. Run Playwright tests with Firefox workaround
+        run: HOME=/root npx playwright test
 
-      - name: 6. Upload Playwright Report (on failure)
+      - name: 7. Upload Playwright Report (on failure)
         # Upload the test artifacts (traces and HTML report) if the previous test step fails.
         if: always()
         uses: actions/upload-artifact@v4
