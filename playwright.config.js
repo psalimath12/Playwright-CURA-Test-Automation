@@ -64,5 +64,5 @@ module.exports = defineConfig({
       name: 'webkit',
       use: { ...require('@playwright/test').devices['Desktop Safari'] },
     },
-  ],
+  ]
 });
