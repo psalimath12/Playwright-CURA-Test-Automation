@@ -29,7 +29,10 @@ module.exports = defineConfig({
   workers: process.env.CI ? 1 : undefined,
 
   // Reporter to use. See https://playwright.dev/docs/test-reporters
-  reporter: 'html',
+  reporter: [
+    ['html'],
+    ['./utils/my_reporter.js']
+    ],
 
   // Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions.
   use: {
@@ -41,6 +44,10 @@ module.exports = defineConfig({
 
     // Headless mode for faster execution. Set to false to see the browser UI.
     headless: true, // Change to false if you want to see the browser UI during execution.
+
+
+    launchOptions: {
+      args: ['--no-sandbox'], // Add any necessary launch arguments here
   },
 
   // Configure projects for major browsers.
