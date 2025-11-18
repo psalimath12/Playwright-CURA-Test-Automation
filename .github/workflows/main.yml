@@ -14,6 +14,9 @@ jobs:
     # Use the latest stable version of Ubuntu
     runs-on: ubuntu-latest
 
+    env:
+      HOME: /root
+
     steps:
       - name: 1. Checkout repository
         # Checks out your repository under $GITHUB_WORKSPACE, so the workflow can access it.
@@ -45,13 +48,8 @@ jobs:
       - name: 5. Run Playwright tests (Full SUITE)
         # 🌟 MODIFIED: Run all tests in one go
         run: npx playwright test
-        env:
-          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
-      
-      - name: 6. Run Playwright tests with Firefox workaround
-        run: HOME=/root npx playwright test
-
-      - name: 7. Upload Playwright Report (on failure)
+    
+      - name: 6. Upload Playwright Report (on failure)
         # Upload the test artifacts (traces and HTML report) if the previous test step fails.
         if: always()
         uses: actions/upload-artifact@v4
